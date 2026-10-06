@@ -1,0 +1,54 @@
+# Free automated scrape of the USDA SNAP time-limit waiver page.
+# Runs on a schedule and on demand; commits waivers.json for the HTML tracker.
+#
+# Setup (one-time, ~5 minutes):
+#   1. Create a free public GitHub repository.
+#   2. Upload: fetch_waivers.py, this workflow file, and usda-waiver-tracker.html
+#   3. Enable Actions if prompted.
+#   4. After the first run, set the tracker "Data feed URL" in Settings to:
+#        https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/main/waivers.json
+#      (or your default branch name)
+#
+# Cost: $0 on GitHub's free plan for public repos.
+
+name: Fetch USDA SNAP waivers
+
+on:
+  schedule:
+    # 14:00 UTC daily (~9am Central)
+    - cron: "0 14 * * *"
+  workflow_dispatch: {}
+  push:
+    paths:
+      - "fetch_waivers.py"
+      - ".github/workflows/fetch-waivers.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch and parse USDA page
+        run: python3 fetch_waivers.py -o waivers.json --pretty
+
+      - name: Commit updated data (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add waivers.json
+          if git diff --staged --quiet; then
+            echo "No changes to waivers.json"
+          else
+            git commit -m "Update SNAP waiver data $(date -u +%Y-%m-%d)"
+            git push
+          fi
