@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>USDA SNAP Waiver Tracker</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1b2430; --muted:#5d6b7c; --line:#dde2e9;
+    --accent:#1d5fa8; --accent-ink:#fff;
+    --cur:#0f7a4d; --cur-bg:#e3f5ec; --prior:#9a5b00; --prior-bg:#fdf0d8; --none:#5d6b7c; --none-bg:#eceff3;
+    --add:#0f7a4d; --rem:#b3261e; --chg:#9a5b00; --err-bg:#fde8e6; --err:#b3261e;
+    --nav-w:260px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#12171e; --card:#1b232d; --ink:#e8edf3; --muted:#9aa7b6; --line:#2d3946;
+      --accent:#5aa2ee; --accent-ink:#0b1420;
+      --cur:#5fd39b; --cur-bg:#12352a; --prior:#f0b24d; --prior-bg:#3a2b10; --none:#9aa7b6; --none-bg:#232d38;
+      --add:#5fd39b; --rem:#ff8a80; --chg:#f0b24d; --err-bg:#3a1a18; --err:#ff8a80;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .topbar{
+    position:sticky;top:0;z-index:40;
+    display:flex;align-items:center;gap:10px;
+    padding:10px 14px;background:var(--card);border-bottom:1px solid var(--line);
+  }
+  .topbar h1{font-size:1.05rem;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hamburger{
+    width:42px;height:42px;border:1px solid var(--line);border-radius:10px;
+    background:var(--bg);color:var(--ink);cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0;
+  }
+  .hamburger span{display:block;width:18px;height:2px;background:currentColor;border-radius:1px}
+  .nav-backdrop{
+    position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:50;
+    opacity:0;pointer-events:none;transition:opacity .2s;
+  }
+  .nav-backdrop.open{opacity:1;pointer-events:auto}
+  .nav-drawer{
+    position:fixed;top:0;left:0;bottom:0;width:var(--nav-w);max-width:86vw;
+    background:var(--card);border-right:1px solid var(--line);z-index:60;
+    transform:translateX(-105%);transition:transform .22s ease;padding:16px 12px;
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .nav-drawer.open{transform:translateX(0)}
+  .nav-drawer .nav-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:4px 10px 10px}
+  .nav-drawer a{
+    display:block;padding:12px 12px;border-radius:10px;color:var(--ink);text-decoration:none;font-weight:500;
+  }
+  .nav-drawer a:hover{background:var(--bg)}
+  .nav-drawer a.active{background:var(--accent);color:var(--accent-ink)}
+  .wrap{max-width:1000px;margin:0 auto;padding:16px}
+  .page{display:none}
+  .page.active{display:block}
+  h2.page-title{font-size:1.25rem;margin:0 0 6px}
+  .sub{color:var(--muted);margin:0 0 14px;font-size:.92rem}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+  label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:3px}
+  select,input[type=text],input[type=email],input[type=url],textarea{
+    width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+  .grow{flex:1 1 220px}
+  button{padding:10px 16px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;cursor:pointer}
+  button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+  button:disabled{opacity:.55;cursor:wait}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:10px}
+  .hint{font-size:.8rem;color:var(--muted);margin:6px 0 0}
+  .status{font-size:.9rem;color:var(--muted);margin:0 0 10px}
+  .banner{border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.92rem}
+  .banner.err{background:var(--err-bg);color:var(--err)}
+  .banner.info{background:var(--none-bg);color:var(--ink)}
+  .banner.ok{background:var(--cur-bg);color:var(--cur)}
+  .changes h2,.cards-head h2{font-size:1.05rem;margin:0 0 8px}
+  .changes ul{margin:0;padding-left:18px}
+  .changes li{margin:4px 0}
+  .tag{font-weight:700;font-size:.78rem;text-transform:uppercase;margin-right:6px}
+  .tag.added{color:var(--add)} .tag.removed{color:var(--rem)} .tag.changed,.tag.info{color:var(--chg)}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .card h3{margin:0 0 6px;font-size:1rem}
+  .badge{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 8px;border-radius:99px}
+  .badge.cur{color:var(--cur);background:var(--cur-bg)}
+  .badge.prior{color:var(--prior);background:var(--prior-bg)}
+  .badge.none{color:var(--none);background:var(--none-bg)}
+  .card p{margin:8px 0 0;font-size:.88rem}
+  .card details{margin-top:8px;font-size:.88rem}
+  .card summary{cursor:pointer;color:var(--muted)}
+  .card ul{margin:6px 0 0;padding-left:18px}
+  a{color:var(--accent)}
+  .cards-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+  .chk{display:flex;gap:6px;align-items:center;font-size:.88rem;color:var(--muted)}
+  .chk input{width:auto}
+  footer{color:var(--muted);font-size:.8rem;margin:18px 0 30px}
+  .about-body p{margin:0 0 12px}
+  .about-body ul{margin:0 0 12px;padding-left:20px}
+  .is-hidden{display:none!important}
+  @media print{
+    .noprint,.topbar,.nav-drawer,.nav-backdrop{display:none!important}
+    body{background:#fff;color:#000}
+    .card,.panel{break-inside:avoid;border-color:#bbb}
+    .page{display:block!important}
+    .page:not(#page-home){display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- Top bar + hamburger -->
+<header class="topbar noprint">
+  <button type="button" class="hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <h1 id="topTitle">USDA SNAP Waiver Tracker</h1>
+</header>
+
+<div class="nav-backdrop" id="navBackdrop"></div>
+<nav class="nav-drawer" id="navDrawer" aria-label="Main menu">
+  <div class="nav-title">Menu</div>
+  <a href="#home" data-page="home" class="active">Home</a>
+  <a href="#settings" data-page="settings">Settings</a>
+  <a href="#email" data-page="email">Email</a>
+  <a href="#about" data-page="about">About</a>
+</nav>
+
+<div class="wrap">
+  <!-- HOME -->
+  <section class="page active" id="page-home">
+    <p class="sub">Reads the USDA Food and Nutrition page of state waiver responses, shows the current status for every state, and reports what changed since your last check.</p>
+
+    <div class="panel noprint">
+      <div class="row">
+        <div class="grow">
+          <label for="stateSel">State</label>
+          <select id="stateSel"></select>
+        </div>
+        <button id="updateBtn" class="primary">Update now</button>
+        <button id="printBtn" type="button">Print</button>
+      </div>
+      <p class="hint">Choosing one state limits both the on-screen report and the email to that state.</p>
+    </div>
+
+    <div id="banner"></div>
+    <p class="status" id="status">Click “Update now” to load current waiver status.</p>
+    <div id="changes"></div>
+
+    <div class="cards-head">
+      <h2 id="cardsTitle">Status by state</h2>
+      <label class="chk noprint"><input type="checkbox" id="hideEmpty"> Hide states with no waiver documents</label>
+    </div>
+    <div class="cards" id="cards"></div>
+
+    <footer>
+      Source: USDA Food and Nutrition time limit waiver pages. “Status” here is the most recent response document posted for each state; open the linked PDF for the approval or denial details. Settings and the change baseline are saved in this browser only.
+    </footer>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="page-settings">
+    <h2 class="page-title">Settings</h2>
+    <p class="sub">Point the tracker at an automated data feed (recommended for non-profits), or use paste as a fallback.</p>
+
+    <div class="panel">
+      <div style="grid-column:1/-1">
+        <label for="dataFeed">Data feed URL (waivers.json from the free scraper)</label>
+        <input type="url" id="dataFeed" placeholder="https://raw.githubusercontent.com/YOUR_ORG/YOUR_REPO/main/waivers.json">
+        <p class="hint">Best option: run <code>fetch_waivers.py</code> on a free GitHub Actions schedule and paste the raw JSON URL here. Update then loads in under a second with no CORS issues.</p>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div style="grid-column:1/-1">
+          <label for="srcUrl">USDA page URL (used only if no data feed)</label>
+          <input type="url" id="srcUrl">
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="proxy">Optional CORS proxy prefix</label>
+          <input type="text" id="proxy" placeholder="https://my-proxy.example.com/?url=">
+        </div>
+        <div>
+          <label for="interval">Auto-check while this page is open</label>
+          <select id="interval">
+            <option value="0">Off</option>
+            <option value="1">Every hour</option>
+            <option value="6">Every 6 hours</option>
+            <option value="24">Every 24 hours</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button id="resetBtn" type="button">Reset saved baseline</button>
+      </div>
+      <p class="hint">Resetting the baseline means the next successful check becomes the new “last seen” state for change detection.</p>
+    </div>
+
+    <div class="panel" id="pastePanel">
+      <h2 class="page-title" style="font-size:1.05rem;margin:0 0 8px">Paste page source (manual fallback)</h2>
+      <p class="hint">Only needed if you are not using a data feed. 1. <a id="openUsdaLink" href="https://www.fna.usda.gov/snap/waivers/timelimit/2025-2029" target="_blank" rel="noopener">Open the USDA page</a>. 2. View Page Source (Ctrl+U). 3. Copy all and paste below.</p>
+      <textarea id="pasteBox" rows="6" placeholder="Paste the full page source HTML here…" style="margin-top:10px"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button id="pasteBtn" type="button" class="primary">Read pasted source</button>
+        <button id="openUsdaBtn" type="button">Open USDA page</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL -->
+  <section class="page" id="page-email">
+    <h2 class="page-title">Email</h2>
+    <p class="sub">Where to send change reports when the tracker finds updates.</p>
+
+    <div class="panel">
+      <div>
+        <label for="emailTo">Your email address</label>
+        <input type="email" id="emailTo" placeholder="you@example.org" autocomplete="email">
+      </div>
+      <div style="margin-top:12px">
+        <label for="method">How to send</label>
+        <select id="method">
+          <option value="mailto">Open a draft in my email app (easiest — no setup)</option>
+          <option value="emailjs">EmailJS — send automatically</option>
+          <option value="formspree">Formspree — send automatically</option>
+        </select>
+      </div>
+      <p class="hint" id="mailtoHint">When changes are found, a “Email these changes” button opens a pre-filled message in your mail app. No account needed.</p>
+
+      <div id="ejsFields" class="is-hidden" style="margin-top:14px">
+        <p class="hint" id="ejsHint">Sign up at emailjs.com, create a service and a template with variables <code>{{to_email}}</code>, <code>{{subject}}</code>, and <code>{{message}}</code>, then paste the IDs below.</p>
+        <div style="margin-top:10px"><label for="ejsService">Service ID</label><input type="text" id="ejsService" placeholder="service_xxxxxxx"></div>
+        <div style="margin-top:10px"><label for="ejsTemplate">Template ID</label><input type="text" id="ejsTemplate" placeholder="template_xxxxxxx"></div>
+        <div style="margin-top:10px"><label for="ejsKey">Public key</label><input type="text" id="ejsKey" placeholder="Your EmailJS public key"></div>
+      </div>
+
+      <div id="fsFields" class="is-hidden" style="margin-top:14px">
+        <p class="hint" id="fsHint">Sign up at formspree.io, create a form, and paste the form endpoint URL below. Mail is delivered to the address on your Formspree account.</p>
+        <div style="margin-top:10px"><label for="fsUrl">Form endpoint URL</label><input type="url" id="fsUrl" placeholder="https://formspree.io/f/xxxxxxxx"></div>
+      </div>
+
+      <div class="row" style="margin-top:16px">
+        <button id="testBtn" type="button" class="primary">Send test email</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page" id="page-about">
+    <h2 class="page-title">About</h2>
+    <div class="panel about-body">
+      <p><strong>USDA SNAP Time Limit Waiver Tracker</strong> monitors the USDA Food and Nutrition Administration page that lists state requests and FNS/FNA responses for Able-Bodied Adults Without Dependents (ABAWD) time limit waivers.</p>
+      <p>It shows which states have a response posted for the current federal fiscal year, lists linked PDFs, and (after your first successful check) reports what changed since the last time you ran an update.</p>
+      <ul>
+        <li>Data is read from the public USDA page you configure (default: FY 2025–2029 time limit waivers).</li>
+        <li>Settings, email preferences, and the change baseline are stored only in this browser (localStorage).</li>
+        <li>Nothing is sent to a third-party server except when you explicitly use EmailJS or Formspree, or when the page tries public CORS proxies to load the USDA HTML.</li>
+      </ul>
+      <p><strong>Recommended for organizations:</strong> run the free <code>fetch_waivers.py</code> scraper on a daily GitHub Actions schedule and set the resulting <code>waivers.json</code> URL under Settings → Data feed URL. The tracker then updates without CORS or manual paste.</p>
+      <p>Without a data feed, browsers block direct reads of USDA sites. Use <strong>Settings → Paste page source</strong> as a manual fallback.</p>
+      <p class="hint">Source of truth: the linked PDFs on the USDA site. Status labels here summarize what is posted, not the legal approval text inside each document.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+
+var STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Guam","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virgin Islands","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+var DEFAULT_URL = "https://www.fna.usda.gov/snap/waivers/timelimit/2025-2029";
+/* Few proxies, short timeouts — fail fast so “Checking…” never lasts long */
+var PROXIES = [
+  function(u){ return "https://api.allorigins.win/raw?url=" + encodeURIComponent(u); },
+  function(u){ return "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u); }
+];
+var FETCH_TIMEOUT_MS = 4000;
+var MONTHS = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
+var PAGE_TITLES = { home: "USDA SNAP Waiver Tracker", settings: "Settings", email: "Email", about: "About" };
+
+/* ---------- small helpers ---------- */
+function $(id){ return document.getElementById(id); }
+function norm(s){ return (s || "").replace(/[\u00a0\s]+/g, " ").trim(); }
+function pad(n){ return (n < 10 ? "0" : "") + n; }
+function el(tag, cls, text){
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+var LS = "usdaWaiverTracker.v1.";
+var store = {
+  get: function(k, d){ try { var v = localStorage.getItem(LS + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set: function(k, v){ try { localStorage.setItem(LS + k, JSON.stringify(v)); } catch (e) {} }
+};
+
+/* ---------- navigation ---------- */
+function closeMenu(){
+  $("navDrawer").classList.remove("open");
+  $("navBackdrop").classList.remove("open");
+  $("menuBtn").setAttribute("aria-expanded", "false");
+}
+function openMenu(){
+  $("navDrawer").classList.add("open");
+  $("navBackdrop").classList.add("open");
+  $("menuBtn").setAttribute("aria-expanded", "true");
+}
+function showPage(name){
+  if (!PAGE_TITLES[name]) name = "home";
+  document.querySelectorAll(".page").forEach(function(p){ p.classList.toggle("active", p.id === "page-" + name); });
+  document.querySelectorAll("#navDrawer a").forEach(function(a){
+    a.classList.toggle("active", a.getAttribute("data-page") === name);
+  });
+  $("topTitle").textContent = PAGE_TITLES[name];
+  try { history.replaceState(null, "", "#" + name); } catch (e) {}
+  closeMenu();
+  window.scrollTo(0, 0);
+}
+
+/* ---------- parsing ---------- */
+function dateFrom(str){
+  var m = (str || "").match(/([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})/);
+  if (m){
+    var i = MONTHS.indexOf(m[1].toLowerCase());
+    if (i >= 0) return { iso: m[3] + "-" + pad(i + 1) + "-" + pad(+m[2]), text: m[0] };
+  }
+  m = (str || "").match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return { iso: m[3] + "-" + pad(+m[1]) + "-" + pad(+m[2]), text: m[0] };
+  return null;
+}
+function tailText(a){
+  var t = "", n = a.nextSibling;
+  while (n){
+    if (n.nodeType === 3) t += n.textContent;
+    else if (n.nodeType === 1){
+      if (/^(A|UL|OL|LI|P|DIV|BR|H\d)$/.test(n.tagName)) break;
+      t += n.textContent;
+    }
+    n = n.nextSibling;
+  }
+  return norm(t);
+}
+
+function parsePage(html, pageUrl){
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  var root = doc.querySelector("main") || doc.body || doc.documentElement;
+  var stateMap = {};
+  STATES.forEach(function(s){ stateMap[s.toLowerCase()] = s; });
+
+  var result = { pageUrl: pageUrl, pageUpdated: "", general: [], requests: [], states: {}, starred: {}, fetchedAt: Date.now() };
+  STATES.forEach(function(s){ result.states[s] = []; });
+
+  // Prefer structured <dl><dt>State</dt><dd>…</dd> (current USDA layout)
+  var dts = root.querySelectorAll("dl dt");
+  if (dts.length){
+    for (var di = 0; di < dts.length; di++){
+      var dt = dts[di];
+      var nameRaw = norm(dt.textContent).replace(/\s*[*:]+$/, "").trim();
+      var sName = stateMap[nameRaw.toLowerCase()];
+      if (!sName) continue;
+      if ((dt.textContent || "").indexOf("*") >= 0) result.starred[sName] = true;
+      var dd = dt.nextElementSibling;
+      if (!dd || dd.tagName !== "DD") continue;
+      var links = dd.querySelectorAll("a[href]");
+      for (var li = 0; li < links.length; li++){
+        var a = links[li];
+        var href;
+        try { href = new URL(a.getAttribute("href"), pageUrl).href; } catch (e) { continue; }
+        if (!/^https?:/i.test(href)) continue;
+        var text = norm(a.textContent);
+        if (!text) continue;
+        var isZip = /\.zip(\?|$)/i.test(href);
+        var looksDoc = /waiver|response|termination|status update|FNA Response|FNS Response/i.test(text) || /\.pdf(\?|$)/i.test(href);
+        if (!isZip && !looksDoc) continue;
+        var tail = tailText(a);
+        var listItem = a.closest("li");
+        var d = dateFrom(text + " " + tail) || (listItem ? dateFrom(norm(listItem.textContent)) : null);
+        var fyM = text.match(/FY\s*(\d{4})/i);
+        var doc1 = {
+          key: href,
+          title: text,
+          fy: fyM ? +fyM[1] : 0,
+          date: d ? d.iso : "",
+          dateText: d ? d.text : "",
+          flagged: (text + " " + tail).indexOf("*") >= 0
+        };
+        if (isZip){
+          if (!result.requests.some(function(x){ return x.key === doc1.key; })) result.requests.push(doc1);
+        } else {
+          var list = result.states[sName];
+          if (!list.some(function(x){ return x.key === doc1.key; })) list.push(doc1);
+        }
+      }
+    }
+  }
+
+  // Fallback: text-node / document-order walk
+  var tw = doc.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  var n, heads = [], startNode = null, endNode = null;
+  while ((n = tw.nextNode())){
+    var p = n.parentElement;
+    if (!p || p.closest("a,script,style,noscript")) continue;
+    var raw = norm(n.textContent);
+    if (!raw) continue;
+    if (!startNode && /State Requests and Supporting Documents|Response Documents/i.test(raw)){ startNode = n; continue; }
+    if (startNode && !endNode && /(If you have any difficulties|Page updated)/i.test(raw)) endNode = n;
+    if (endNode) continue;
+    var bare = raw.replace(/\s*[*:]+$/, "").trim().toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(stateMap, bare)){
+      heads.push({ node: n, name: stateMap[bare], starred: raw.indexOf("*") >= 0 });
+    }
+  }
+  heads.forEach(function(h){ if (h.starred) result.starred[h.name] = true; });
+
+  var mu = norm(root.textContent).match(/Page updated:\s*([A-Za-z]+\.?\s+\d{1,2},\s+\d{4})/i);
+  if (mu) result.pageUpdated = mu[1];
+
+  var FOLLOWING = Node.DOCUMENT_POSITION_FOLLOWING, PRECEDING = Node.DOCUMENT_POSITION_PRECEDING;
+  var anchors = root.querySelectorAll("a[href]");
+  for (var i = 0; i < anchors.length; i++){
+    var a = anchors[i];
+    var after = !startNode || (startNode.compareDocumentPosition(a) & FOLLOWING);
+    var before = !endNode || (endNode.compareDocumentPosition(a) & PRECEDING);
+    if (!after || !before) continue;
+
+    var href;
+    try { href = new URL(a.getAttribute("href"), pageUrl).href; } catch (e) { continue; }
+    if (!/^https?:/i.test(href)) continue;
+    var text = norm(a.textContent);
+    if (!text) continue;
+    var isZip = /\.zip(\?|$)/i.test(href);
+    var looksDoc = /waiver|response|termination|status update/i.test(text) || /\.pdf(\?|$)/i.test(href);
+    if (!isZip && !looksDoc) continue;
+    if (!startNode && !/abawd|resource-files|work-requirements/i.test(href)) continue;
+
+    var already = false;
+    STATES.forEach(function(s){
+      if (result.states[s].some(function(x){ return x.key === href; })) already = true;
+    });
+    if (already) continue;
+
+    var tail = tailText(a);
+    var liEl = a.closest("li");
+    var d = dateFrom(text + " " + tail) || (liEl ? dateFrom(norm(liEl.textContent)) : null);
+    var fyM = text.match(/FY\s*(\d{4})/i);
+    var doc1 = {
+      key: href,
+      title: text + (isZip && tail ? " " + tail.replace(/\s*\(\s*$/, "") : ""),
+      fy: fyM ? +fyM[1] : 0,
+      date: d ? d.iso : "",
+      dateText: d ? d.text : "",
+      flagged: (text + " " + tail).indexOf("*") >= 0
+    };
+    if (isZip){
+      if (!result.requests.some(function(x){ return x.key === doc1.key; })) result.requests.push(doc1);
+      continue;
+    }
+    var cur = null;
+    for (var j = 0; j < heads.length; j++){
+      if (heads[j].node.compareDocumentPosition(a) & FOLLOWING) cur = heads[j].name; else break;
+    }
+    if (cur){
+      var list = result.states[cur];
+      if (!list.some(function(x){ return x.key === doc1.key; })) list.push(doc1);
+    } else {
+      if (!result.general.some(function(x){ return x.key === doc1.key; })) result.general.push(doc1);
+    }
+  }
+  return result;
+}
+
+/* ---------- status & diff ---------- */
+function currentFY(){
+  var now = new Date();
+  return now.getMonth() >= 9 ? now.getFullYear() + 1 : now.getFullYear();
+}
+function sortDocs(docs){
+  return docs.slice().sort(function(a, b){
+    return (b.date || "").localeCompare(a.date || "") || (b.fy || 0) - (a.fy || 0);
+  });
+}
+function statusFor(docs, fy, starred){
+  if (!docs.length) return { cls: "none", label: "No waiver documents posted" };
+  var sorted = sortDocs(docs);
+  var hasCur = docs.some(function(d){ return d.fy === fy; });
+  var latest = sorted[0];
+  var when = latest.dateText ? " (" + latest.dateText + ")" : "";
+  var star = starred ? " · marked (*) by USDA" : "";
+  if (hasCur) return { cls: "cur", label: "FY " + fy + " response posted" + star, latest: latest, when: when };
+  return { cls: "prior", label: "No FY " + fy + " response yet" + star, latest: latest, when: when };
+}
+
+function compareDocs(scope, oldDocs, newDocs, out){
+  var oldMap = {}, newMap = {};
+  oldDocs.forEach(function(d){ oldMap[d.key] = d; });
+  newDocs.forEach(function(d){ newMap[d.key] = d; });
+  newDocs.forEach(function(d){
+    var o = oldMap[d.key];
+    if (!o) out.push({ scope: scope, type: "added", text: d.title + (d.dateText ? " (" + d.dateText + ")" : ""), url: d.key });
+    else if (o.title !== d.title || o.dateText !== d.dateText)
+      out.push({ scope: scope, type: "changed", text: "Updated: " + d.title + (d.dateText ? " (" + d.dateText + ")" : ""), url: d.key });
+  });
+  oldDocs.forEach(function(d){
+    if (!newMap[d.key]) out.push({ scope: scope, type: "removed", text: d.title + (d.dateText ? " (" + d.dateText + ")" : ""), url: d.key });
+  });
+}
+
+function diffPages(base, cur, scope){
+  var out = [], had = false;
+  var names = scope === "ALL" ? STATES : [scope];
+  if (base && base.states){
+    names.forEach(function(n){
+      if (Object.prototype.hasOwnProperty.call(base.states, n)){
+        had = true;
+        compareDocs(n, base.states[n] || [], cur.states[n] || [], out);
+      }
+    });
+    if (scope === "ALL"){
+      if (base.general){ had = true; compareDocs("General notices", base.general, cur.general, out); }
+      if (base.requests){ compareDocs("State request files", base.requests, cur.requests, out); }
+      if (base.pageUpdated && cur.pageUpdated && base.pageUpdated !== cur.pageUpdated)
+        out.push({ scope: "Page", type: "info", text: "USDA page “Page updated” date moved from " + base.pageUpdated + " to " + cur.pageUpdated, url: cur.pageUrl });
+    }
+  }
+  return { changes: out, hadBaseline: had };
+}
+
+function mergeBaseline(base, cur, scope){
+  var nb = base ? JSON.parse(JSON.stringify(base)) : { states: {} };
+  nb.states = nb.states || {};
+  if (scope === "ALL"){
+    nb.states = JSON.parse(JSON.stringify(cur.states));
+    nb.general = cur.general;
+    nb.requests = cur.requests;
+    nb.pageUpdated = cur.pageUpdated;
+  } else {
+    nb.states[scope] = cur.states[scope] || [];
+  }
+  nb.savedAt = Date.now();
+  return nb;
+}
+
+/* ---------- fetching (fast-fail) ---------- */
+function withTimeout(promise, ms){
+  return new Promise(function(resolve, reject){
+    var t = setTimeout(function(){ reject(new Error("timed out")); }, ms);
+    promise.then(function(v){ clearTimeout(t); resolve(v); }, function(e){ clearTimeout(t); reject(e); });
+  });
+}
+function looksValid(text){
+  return text && text.length > 2000 && /Response Documents|Time Limit Waivers|ABAWD|State Requests/i.test(text);
+}
+function extractHtmlFromProxyResponse(txt){
+  if (txt && txt.trim().charAt(0) === "{"){
+    try {
+      var j = JSON.parse(txt);
+      if (j && typeof j.contents === "string") return j.contents;
+      if (j && typeof j.content === "string") return j.content;
+    } catch (e) {}
+  }
+  return txt;
+}
+function swapHost(u){
+  try {
+    var x = new URL(u);
+    if (/fna\.usda\.gov$/i.test(x.hostname)) { x.hostname = "www.fns.usda.gov"; return x.href; }
+    if (/fns\.usda\.gov$/i.test(x.hostname)) { x.hostname = "www.fna.usda.gov"; return x.href; }
+    return null;
+  } catch (e) { return null; }
+}
+
+async function tryOneFetch(builtUrl, timeoutMs){
+  var res = await withTimeout(fetch(builtUrl, { mode: "cors", credentials: "omit", cache: "no-store" }), timeoutMs);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  var txt = extractHtmlFromProxyResponse(await res.text());
+  if (!looksValid(txt)) throw new Error("unexpected content");
+  return txt;
+}
+
+/* Race all candidates at once; give up after FETCH_TIMEOUT_MS so UI stays responsive */
+async function fetchPage(url, customProxy){
+  var primary = url;
+  var candidates = [
+    { name: "direct", url: primary, built: primary }
+  ];
+  if (customProxy && customProxy.trim()) {
+    var built = (customProxy.indexOf("?") >= 0 || /[=/]$/.test(customProxy))
+      ? customProxy + encodeURIComponent(primary)
+      : customProxy + encodeURIComponent(primary);
+    candidates.push({ name: "custom proxy", url: primary, built: built });
+  }
+  PROXIES.forEach(function(b, i){
+    candidates.push({ name: "proxy " + (i + 1), url: primary, built: b(primary) });
+  });
+
+  var settled = false;
+  var winner = null;
+  var pending = candidates.length;
+
+  await new Promise(function(resolve){
+    var timer = setTimeout(function(){
+      if (!settled){ settled = true; resolve(); }
+    }, FETCH_TIMEOUT_MS + 500);
+
+    candidates.forEach(function(c){
+      tryOneFetch(c.built, FETCH_TIMEOUT_MS).then(function(html){
+        if (!settled){
+          settled = true;
+          winner = { html: html, url: c.url, route: c.name };
+          clearTimeout(timer);
+          resolve();
+        }
+      }).catch(function(){
+        pending--;
+        if (pending <= 0 && !settled){
+          settled = true;
+          clearTimeout(timer);
+          resolve();
+        }
+      });
+    });
+  });
+
+  if (winner) return winner;
+
+  throw new Error(
+    "Could not load the USDA page from the browser. Set a Data feed URL in Settings (from fetch_waivers.py / GitHub Actions), or use Paste page source."
+  );
+}
+
+/* ---------- email ---------- */
+function buildEmail(changes, scope, page){
+  var label = scope === "ALL" ? "all states" : scope;
+  var real = changes.filter(function(c){ return c.type !== "info"; });
+  var subject = "USDA SNAP waiver update (" + label + "): " + real.length + " change" + (real.length === 1 ? "" : "s");
+  var lines = ["Changes detected on the USDA time limit waiver page for " + label + ":", ""];
+  var verb = { added: "NEW", removed: "REMOVED", changed: "CHANGED", info: "NOTE" };
+  changes.forEach(function(c){
+    lines.push("[" + c.scope + "] " + verb[c.type] + ": " + c.text);
+    if (c.url) lines.push("    " + c.url);
+  });
+  lines.push("", "Source page: " + page.pageUrl, "Checked: " + new Date(page.fetchedAt).toLocaleString());
+  return { subject: subject, body: lines.join("\n") };
+}
+
+async function sendEmail(subject, body, s, interactive){
+  if (s.method === "emailjs"){
+    if (!s.email) throw new Error("Enter a recipient email address on the Email page.");
+    if (!s.ejsService || !s.ejsTemplate || !s.ejsKey) throw new Error("Fill in the EmailJS service ID, template ID and public key on the Email page.");
+    var r = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        service_id: s.ejsService, template_id: s.ejsTemplate, user_id: s.ejsKey,
+        template_params: { to_email: s.email, subject: subject, message: body }
+      })
+    });
+    if (!r.ok) throw new Error("EmailJS said: " + (await r.text()));
+    return "sent";
+  }
+  if (s.method === "formspree"){
+    if (!s.fsUrl) throw new Error("Enter your Formspree endpoint URL on the Email page.");
+    var r2 = await fetch(s.fsUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ email: s.email || undefined, subject: subject, message: body })
+    });
+    if (!r2.ok) throw new Error("Formspree said: " + (await r2.text()));
+    return "sent";
+  }
+  if (!s.email) throw new Error("Enter a recipient email address on the Email page.");
+  if (!interactive) return "draft-needed";
+  window.location.href = "mailto:" + s.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body.slice(0, 1800));
+  return "draft-opened";
+}
+
+/* ---------- UI ---------- */
+var settings = {
+  email: "", method: "mailto", ejsService: "", ejsTemplate: "", ejsKey: "", fsUrl: "",
+  url: DEFAULT_URL, proxy: "", dataFeed: "", interval: "0", state: "ALL", hideEmpty: false
+};
+var lastPage = null, lastChanges = [], timer = null, busy = false;
+
+function loadSettings(){
+  var saved = store.get("settings", {});
+  Object.keys(saved).forEach(function(k){ if (k in settings) settings[k] = saved[k]; });
+}
+function saveSettings(){ store.set("settings", settings); }
+
+function showBanner(kind, msg, action){
+  var b = $("banner");
+  b.textContent = "";
+  if (!msg) return;
+  var d = el("div", "banner " + kind);
+  d.appendChild(document.createTextNode(msg));
+  if (action){
+    var btn = el("button", null, action.label);
+    btn.style.marginLeft = "10px";
+    btn.addEventListener("click", action.fn);
+    d.appendChild(btn);
+  }
+  b.appendChild(d);
+}
+
+function renderChanges(changes, hadBaseline, scope){
+  var box = $("changes");
+  box.textContent = "";
+  if (!hadBaseline) return;
+  var panel = el("div", "panel changes");
+  if (!changes.length){
+    panel.appendChild(el("h2", null, "No changes since last check"));
+    box.appendChild(panel);
+    return;
+  }
+  panel.appendChild(el("h2", null, changes.length + " change" + (changes.length === 1 ? "" : "s") + " since last check"));
+  var ul = el("ul");
+  var verb = { added: "New", removed: "Removed", changed: "Changed", info: "Note" };
+  changes.forEach(function(c){
+    var li = el("li");
+    li.appendChild(el("span", "tag " + c.type, verb[c.type]));
+    li.appendChild(document.createTextNode("[" + c.scope + "] "));
+    if (c.url && /^https?:/i.test(c.url)){
+      var a = el("a", null, c.text);
+      a.href = c.url; a.target = "_blank"; a.rel = "noopener";
+      li.appendChild(a);
+    } else li.appendChild(document.createTextNode(c.text));
+    ul.appendChild(li);
+  });
+  panel.appendChild(ul);
+  box.appendChild(panel);
+}
+
+function renderCards(page, scope){
+  var wrap = $("cards");
+  wrap.textContent = "";
+  var fy = currentFY();
+  var names = scope === "ALL" ? STATES : [scope];
+  var withCur = 0, shown = 0;
+  names.forEach(function(n){
+    var docs = page.states[n] || [];
+    var st = statusFor(docs, fy, page.starred && page.starred[n]);
+    if (st.cls === "cur") withCur++;
+    if (settings.hideEmpty && scope === "ALL" && !docs.length) return;
+    shown++;
+    var card = el("article", "card");
+    card.appendChild(el("h3", null, n));
+    card.appendChild(el("span", "badge " + st.cls, st.label));
+    if (st.latest){
+      var p = el("p");
+      p.appendChild(document.createTextNode("Latest: "));
+      var a = el("a", null, st.latest.title);
+      a.href = st.latest.key; a.target = "_blank"; a.rel = "noopener";
+      p.appendChild(a);
+      p.appendChild(document.createTextNode(st.when));
+      card.appendChild(p);
+    }
+    if (docs.length){
+      var det = el("details");
+      if (scope !== "ALL") det.open = true;
+      det.appendChild(el("summary", null, docs.length + " document" + (docs.length === 1 ? "" : "s")));
+      var ul = el("ul");
+      sortDocs(docs).forEach(function(d){
+        var li = el("li");
+        var l = el("a", null, d.title);
+        l.href = d.key; l.target = "_blank"; l.rel = "noopener";
+        li.appendChild(l);
+        if (d.dateText) li.appendChild(document.createTextNode(" (" + d.dateText + ")"));
+        ul.appendChild(li);
+      });
+      det.appendChild(ul);
+      card.appendChild(det);
+    }
+    wrap.appendChild(card);
+  });
+  $("cardsTitle").textContent = scope === "ALL"
+    ? "Status by state — " + withCur + " of " + names.length + " have an FY " + fy + " response posted"
+    : "Status — " + scope;
+  if (!shown) wrap.appendChild(el("p", "hint", "Nothing to show."));
+}
+
+function normalizeFeedPage(data){
+  /* Accept scraper JSON (schemaVersion 1) and shape it like parsePage() output */
+  var page = {
+    pageUrl: data.pageUrl || settings.url || DEFAULT_URL,
+    pageUpdated: data.pageUpdated || "",
+    general: data.general || [],
+    requests: data.requests || [],
+    states: {},
+    starred: data.starred || {},
+    fetchedAt: data.fetchedAt || Date.now()
+  };
+  STATES.forEach(function(s){
+    page.states[s] = (data.states && data.states[s]) ? data.states[s] : [];
+  });
+  return page;
+}
+
+async function fetchJsonFeed(feedUrl){
+  var res = await withTimeout(fetch(feedUrl, { mode: "cors", credentials: "omit", cache: "no-store" }), 10000);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  var data = await res.json();
+  if (!data || !data.states) throw new Error("JSON feed missing states");
+  return normalizeFeedPage(data);
+}
+
+async function runCheck(opts){
+  opts = opts || {};
+  if (busy) return;
+  busy = true;
+  $("updateBtn").disabled = true;
+  showBanner("", "");
+  var scope = settings.state || "ALL";
+  var usingFeed = !opts.html && settings.dataFeed && settings.dataFeed.trim();
+  $("status").textContent = opts.html
+    ? "Reading pasted source…"
+    : (usingFeed ? "Loading data feed…" : "Checking the USDA page (a few seconds)…");
+  showPage("home");
+  try {
+    var page, route;
+    if (opts.html){
+      page = parsePage(opts.html, settings.url);
+      route = "pasted source";
+    } else if (usingFeed){
+      page = await fetchJsonFeed(settings.dataFeed.trim());
+      route = "data feed";
+    } else {
+      var r = await fetchPage(settings.url, settings.proxy);
+      page = parsePage(r.html, r.url);
+      route = r.route;
+    }
+    var found = 0;
+    STATES.forEach(function(s){ found += page.states[s].length; });
+    if (!found && !page.general.length)
+      throw new Error("The page loaded but no waiver documents were found. USDA may have changed the page layout.");
+
+    lastPage = page;
+    var base = store.get("baseline", null);
+    var d = diffPages(base, page, scope);
+    lastChanges = d.changes;
+
+    renderCards(page, scope);
+    renderChanges(d.changes, d.hadBaseline, scope);
+
+    var realChanges = d.changes.filter(function(c){ return c.type !== "info"; });
+    var advance = true;
+    var msg = "Checked " + new Date(page.fetchedAt).toLocaleString() + " via " + route +
+      (page.pageUpdated ? " · USDA page updated " + page.pageUpdated : "") + ".";
+
+    if (!d.hadBaseline){
+      msg += " First check for this view saved as the baseline; changes will be reported from now on.";
+    } else if (realChanges.length){
+      var mail = buildEmail(d.changes, scope, page);
+      var autoMethod = settings.method === "emailjs" || settings.method === "formspree";
+      if (autoMethod){
+        try {
+          await sendEmail(mail.subject, mail.body, settings, false);
+          showBanner("ok", "Change report emailed.");
+        } catch (e) {
+          advance = false;
+          showBanner("err", "Changes found but the email failed: " + e.message + " They will be reported again on the next check.");
+        }
+      } else {
+        showBanner("info", realChanges.length + " change" + (realChanges.length === 1 ? "" : "s") + " found.", {
+          label: "Email these changes",
+          fn: emailLastChanges
+        });
+      }
+    }
+    if (advance) store.set("baseline", mergeBaseline(base, page, scope));
+    $("status").textContent = msg;
+  } catch (e) {
+    $("status").textContent = "Update failed — use Settings → Paste page source.";
+    showBanner("err", e.message || String(e), {
+      label: "Go to Settings",
+      fn: function(){ showPage("settings"); $("pasteBox").focus(); }
+    });
+  } finally {
+    busy = false;
+    $("updateBtn").disabled = false;
+  }
+}
+
+async function emailLastChanges(){
+  if (!lastPage || !lastChanges.length) return;
+  var mail = buildEmail(lastChanges, settings.state || "ALL", lastPage);
+  try {
+    var r = await sendEmail(mail.subject, mail.body, settings, true);
+    if (r === "sent") showBanner("ok", "Change report emailed.");
+  } catch (e) { showBanner("err", e.message); }
+}
+
+async function sendTest(){
+  var page = lastPage || { pageUrl: settings.url, fetchedAt: Date.now() };
+  var test = [{ scope: "Test", type: "info", text: "This is a test message from your USDA waiver tracker.", url: "" }];
+  var mail = buildEmail(test, "ALL", page);
+  mail.subject = "Test: USDA SNAP waiver tracker";
+  try {
+    var r = await sendEmail(mail.subject, mail.body, settings, true);
+    showBanner("ok", r === "sent" ? "Test email sent." : "Test draft opened in your email app.");
+    showPage("home");
+  } catch (e) {
+    showBanner("err", e.message);
+    showPage("home");
+  }
+}
+
+function applyTimer(){
+  if (timer) clearInterval(timer);
+  timer = null;
+  var h = +settings.interval;
+  if (h > 0) timer = setInterval(function(){ runCheck({ auto: true }); }, h * 3600 * 1000);
+}
+
+function syncMethodFields(){
+  var m = $("method").value;
+  var ejs = $("ejsFields"), fs = $("fsFields"), mh = $("mailtoHint");
+  if (ejs) ejs.classList.toggle("is-hidden", m !== "emailjs");
+  if (fs) fs.classList.toggle("is-hidden", m !== "formspree");
+  if (mh) mh.classList.toggle("is-hidden", m !== "mailto");
+}
+
+function syncUsdaLink(){
+  var u = settings.url || DEFAULT_URL;
+  var a = $("openUsdaLink");
+  if (a) a.href = u;
+}
+
+function init(){
+  loadSettings();
+
+  // Nav
+  $("menuBtn").addEventListener("click", function(){
+    if ($("navDrawer").classList.contains("open")) closeMenu(); else openMenu();
+  });
+  $("navBackdrop").addEventListener("click", closeMenu);
+  document.querySelectorAll("#navDrawer a").forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      showPage(a.getAttribute("data-page"));
+    });
+  });
+  var hash = (location.hash || "#home").replace(/^#/, "");
+  showPage(PAGE_TITLES[hash] ? hash : "home");
+  window.addEventListener("hashchange", function(){
+    var h = (location.hash || "#home").replace(/^#/, "");
+    showPage(PAGE_TITLES[h] ? h : "home");
+  });
+
+  var sel = $("stateSel");
+  var all = el("option", null, "All states"); all.value = "ALL"; sel.appendChild(all);
+  STATES.forEach(function(s){ var o = el("option", null, s); o.value = s; sel.appendChild(o); });
+  sel.value = settings.state;
+
+  $("emailTo").value = settings.email;
+  $("method").value = settings.method;
+  $("ejsService").value = settings.ejsService;
+  $("ejsTemplate").value = settings.ejsTemplate;
+  $("ejsKey").value = settings.ejsKey;
+  $("fsUrl").value = settings.fsUrl;
+  $("srcUrl").value = settings.url;
+  $("proxy").value = settings.proxy;
+  if ($("dataFeed")) $("dataFeed").value = settings.dataFeed || "";
+  $("interval").value = settings.interval;
+  $("hideEmpty").checked = settings.hideEmpty;
+  syncMethodFields();
+  syncUsdaLink();
+
+  var bind = { emailTo: "email", method: "method", ejsService: "ejsService", ejsTemplate: "ejsTemplate", ejsKey: "ejsKey", fsUrl: "fsUrl", srcUrl: "url", proxy: "proxy", dataFeed: "dataFeed", interval: "interval" };
+  Object.keys(bind).forEach(function(id){
+    $(id).addEventListener("change", function(){
+      settings[bind[id]] = $(id).value.trim();
+      if (!settings.url) settings.url = DEFAULT_URL;
+      saveSettings();
+      if (id === "method") syncMethodFields();
+      if (id === "interval") applyTimer();
+      if (id === "srcUrl") syncUsdaLink();
+    });
+  });
+
+  sel.addEventListener("change", function(){
+    settings.state = sel.value;
+    saveSettings();
+    if (lastPage){ renderCards(lastPage, settings.state); $("changes").textContent = ""; }
+  });
+  $("hideEmpty").addEventListener("change", function(){
+    settings.hideEmpty = $("hideEmpty").checked;
+    saveSettings();
+    if (lastPage) renderCards(lastPage, settings.state);
+  });
+  $("updateBtn").addEventListener("click", function(){ runCheck(); });
+  $("printBtn").addEventListener("click", function(){ window.print(); });
+  $("testBtn").addEventListener("click", sendTest);
+  $("resetBtn").addEventListener("click", function(){
+    store.set("baseline", null);
+    showBanner("info", "Saved baseline cleared. The next check will save a fresh baseline.");
+    showPage("home");
+  });
+  $("pasteBtn").addEventListener("click", function(){
+    var v = $("pasteBox").value;
+    if (!v.trim()){ showBanner("err", "Paste the page source first."); showPage("home"); return; }
+    runCheck({ html: v });
+  });
+  $("openUsdaBtn").addEventListener("click", function(){
+    window.open(settings.url || DEFAULT_URL, "_blank", "noopener");
+  });
+
+  applyTimer();
+  if (+settings.interval > 0) runCheck({ auto: true });
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

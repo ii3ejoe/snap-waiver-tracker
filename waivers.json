@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "source": "USDA FNA/FNS time limit waiver page",
+  "pageUrl": "https://www.fna.usda.gov/snap/waivers/timelimit/2025-2029",
+  "pageUpdated": "October 05, 2026",
+  "fetchedAt": 1791307954513,
+  "fetchedAtIso": "2026-10-06T17:32:34.513197+00:00",
+  "states": {
+    "Alabama": [],
+    "Alaska": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ak-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-20",
+        "dateText": "Sept. 20, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ak-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-10-23",
+        "dateText": "Oct. 23, 2025",
+        "flagged": false
+      }
+    ],
+    "Arizona": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/az-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-12",
+        "dateText": "Sept. 12, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/az-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-03-12",
+        "dateText": "March 12, 2026",
+        "flagged": false
+      }
+    ],
+    "Arkansas": [],
+    "California": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-08-12",
+        "dateText": "Aug. 12, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2025-b.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-01-15",
+        "dateText": "Jan. 15, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2025-c.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-05-21",
+        "dateText": "May 21, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2026-a.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-10-23",
+        "dateText": "Oct. 23, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2026-b.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-10",
+        "dateText": "Feb. 10, 2026",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ca-abawd-response-fy2027.pdf",
+        "title": "FY 2027 Waiver - FNA Response (.pdf)",
+        "fy": 2027,
+        "date": "2026-08-24",
+        "dateText": "Aug. 24, 2026",
+        "flagged": false
+      }
+    ],
+    "Colorado": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/co-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-08-15",
+        "dateText": "Aug. 15, 2024",
+        "flagged": false
+      }
+    ],
+    "Connecticut": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ct-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-10-17",
+        "dateText": "Oct. 17, 2024",
+        "flagged": false
+      }
+    ],
+    "Delaware": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/de-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-08-19",
+        "dateText": "Aug. 19, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/de-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-10-06",
+        "dateText": "Oct. 6, 2025",
+        "flagged": false
+      }
+    ],
+    "District of Columbia": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/dc-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-04-26",
+        "dateText": "April 26, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/dc-abawd-response-fy2025-b.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-01-13",
+        "dateText": "Jan. 13, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/dc-abawd-response-fy2025-c.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-05-21",
+        "dateText": "May 21, 2025",
+        "flagged": false
+      }
+    ],
+    "Florida": [],
+    "Georgia": [],
+    "Guam": [],
+    "Hawaii": [],
+    "Idaho": [],
+    "Illinois": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/il-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-08-19",
+        "dateText": "Aug. 19, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/il-abawd-response-fy2025-b.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-03-14",
+        "dateText": "March 14, 2025",
+        "flagged": false
+      }
+    ],
+    "Indiana": [],
+    "Iowa": [],
+    "Kansas": [],
+    "Kentucky": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ky-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-11-27",
+        "dateText": "Nov. 27, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ky-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-09",
+        "dateText": "Feb. 9, 2026",
+        "flagged": false
+      }
+    ],
+    "Louisiana": [],
+    "Maine": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/me-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-13",
+        "dateText": "Sept. 13, 2024",
+        "flagged": false
+      }
+    ],
+    "Maryland": [],
+    "Massachusetts": [],
+    "Michigan": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/mi-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-12-16",
+        "dateText": "Dec. 16, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/mi-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-11-20",
+        "dateText": "Nov. 20, 2025",
+        "flagged": false
+      }
+    ],
+    "Minnesota": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/mn-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-06-03",
+        "dateText": "June 3, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/mn-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-10",
+        "dateText": "Feb. 10, 2026",
+        "flagged": false
+      }
+    ],
+    "Mississippi": [],
+    "Missouri": [],
+    "Montana": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/mt-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-06-03",
+        "dateText": "June 3, 2025",
+        "flagged": false
+      }
+    ],
+    "Nebraska": [],
+    "Nevada": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nv-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-03-14",
+        "dateText": "March 14, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nv-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-10",
+        "dateText": "Feb. 10, 2026",
+        "flagged": false
+      }
+    ],
+    "New Hampshire": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nh-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-03",
+        "dateText": "Sept. 3, 2024",
+        "flagged": false
+      }
+    ],
+    "New Jersey": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nj-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-12-16",
+        "dateText": "Dec. 16, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nj-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-10",
+        "dateText": "Feb. 10, 2026",
+        "flagged": false
+      }
+    ],
+    "New Mexico": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nm-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-18",
+        "dateText": "Sept. 18, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nm-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-10-23",
+        "dateText": "Oct. 23, 2025",
+        "flagged": false
+      }
+    ],
+    "New York": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ny-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-10-02",
+        "dateText": "Oct. 2, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ny-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-02-09",
+        "dateText": "Feb. 9, 2026",
+        "flagged": false
+      }
+    ],
+    "North Carolina": [],
+    "North Dakota": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/nd-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-06-18",
+        "dateText": "June 18, 2025",
+        "flagged": false
+      }
+    ],
+    "Ohio": [],
+    "Oklahoma": [],
+    "Oregon": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/or-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-10-22",
+        "dateText": "Oct. 22, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/or-abawd-response-fy2026-a.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-11-20",
+        "dateText": "Nov. 20, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/or-abawd-response-fy2026-b.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2026-03-30",
+        "dateText": "March 30, 2026",
+        "flagged": false
+      }
+    ],
+    "Pennsylvania": [],
+    "Rhode Island": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/ri-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2025-03-12",
+        "dateText": "March 12, 2025",
+        "flagged": false
+      }
+    ],
+    "South Carolina": [],
+    "South Dakota": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/sd-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-08-12",
+        "dateText": "Aug. 12, 2024",
+        "flagged": false
+      }
+    ],
+    "Tennessee": [],
+    "Texas": [],
+    "Utah": [],
+    "Vermont": [],
+    "Virgin Islands": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/vi-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-11-19",
+        "dateText": "Nov. 19, 2024",
+        "flagged": false
+      }
+    ],
+    "Virginia": [],
+    "Washington": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/wa-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-12-16",
+        "dateText": "Dec. 16, 2024",
+        "flagged": false
+      }
+    ],
+    "West Virginia": [],
+    "Wisconsin": [
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/wi-abawd-response-fy2025.pdf",
+        "title": "FY 2025 Waiver - FNA Response (.pdf)",
+        "fy": 2025,
+        "date": "2024-09-13",
+        "dateText": "Sept. 13, 2024",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/wi-abawd-response-fy2026.pdf",
+        "title": "FY 2026 Waiver - FNA Response (.pdf)",
+        "fy": 2026,
+        "date": "2025-11-20",
+        "dateText": "Nov. 20, 2025",
+        "flagged": false
+      },
+      {
+        "key": "https://www.fna.usda.gov/sites/default/files/resource-files/wi-abawd-response-fy2027.pdf",
+        "title": "FY 2027 Waiver - FNA Response (.pdf)",
+        "fy": 2027,
+        "date": "2026-08-24",
+        "dateText": "Aug. 24, 2026",
+        "flagged": false
+      }
+    ],
+    "Wyoming": []
+  },
+  "starred": {},
+  "requests": [
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2027-ABAWD-State-Requests-and-Data-10-2026.zip",
+      "title": "FY 2027 (.zip)",
+      "fy": 2027,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2026-ABAWD-State-Requests-and-Data-AK-KY-7-2026.zip",
+      "title": "FY 2026 (.zip) (Alaska through Kentucky)",
+      "fy": 2026,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2026-ABAWD-State-Requests-and-Data-MI-NM-7-2026.zip",
+      "title": "FY 2026 (.zip) (Minnesota through New Mexico)",
+      "fy": 2026,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2026-ABAWD-State-Requests-and-Data-NV-WI-7-2026.zip",
+      "title": "FY 2026 (.zip) (Nevada through Wisconsin)",
+      "fy": 2026,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2025-ABAWD-State-Requests-and-Data-AK-HI-7-2026.zip",
+      "title": "FY 2025 (.zip) (Alaska through Hawaii)",
+      "fy": 2025,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2025-ABAWD-State-Requests-and-Data-IL-MN-7-2026.zip",
+      "title": "FY 2025 (.zip) (Illinois through Minnesota)",
+      "fy": 2025,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2025-ABAWD-State-Requests-and-Data-MT-NY-7-2026.zip",
+      "title": "FY 2025 (.zip) (Montana through New York)",
+      "fy": 2025,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/sites/default/files/resource-files/FY2025-ABAWD-State-Requests-and-Data-OR-WI-7-2026.zip",
+      "title": "FY 2025 (.zip) (Oregon through Wisconsin)",
+      "fy": 2025,
+      "date": "",
+      "dateText": "",
+      "flagged": false
+    }
+  ],
+  "general": [
+    {
+      "key": "https://www.fna.usda.gov/snap/work-requirements/policies/waiver-reinstatement",
+      "title": "Waiver of the Time Limit – Status Update",
+      "fy": 0,
+      "date": "2026-02-26",
+      "dateText": "Feb. 26, 2026",
+      "flagged": false
+    },
+    {
+      "key": "https://www.fna.usda.gov/snap/work-requirements/policies/waiver-termination",
+      "title": "Waiver of Able-Bodied Adults Without Dependents Time Limit – Termination",
+      "fy": 0,
+      "date": "2025-10-03",
+      "dateText": "Oct. 3, 2025",
+      "flagged": false
+    }
+  ],
+  "summary": {
+    "statesWithDocuments": 25,
+    "totalDocuments": 47
+  }
+}
